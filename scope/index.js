@@ -237,7 +237,7 @@ const scope = {
 
   exerciseH() {
     let num = 6;
-
+  
     const fn1 = function() {
       let num = 4;
 
@@ -260,7 +260,7 @@ const scope = {
 
     const fn2 = function(num){
       // Log D: num
-
+      
       num = num + 1;
 
       // Log E: num
@@ -268,7 +268,7 @@ const scope = {
 
     fn1();
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = [{A: 4},{D: 9},{E: 10},{B: 9},{C: 4}];
     return result;
 
     // Annotation:

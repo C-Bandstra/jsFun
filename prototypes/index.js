@@ -27,21 +27,26 @@ const kittyPrompts = {
 
     // Return an array of just the names of kitties who are orange e.g.
     // ['Tiger', 'Snickers']
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let orangeNames = kitties.reduce((names, kitty) => {
+      kitty.color == 'orange' ? names.push(kitty.name) : null;
+      return names;
+    }, []);
+
+    const result = orangeNames;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // I am pushing the kitty's name into the acc if its color is orange
+
   },
 
   sortByAge() {
-    // Sort the kitties by their age
-
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let sortedAges = kitties.sort((a, b) => b.age - a.age);
+    const result = sortedAges;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // I am sorting the kitty objects based on whether the kitty is older than the next index.
   },
 
   growUp() {
@@ -58,7 +63,12 @@ const kittyPrompts = {
     // },
     // ...etc]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let grownKitties = kitties.map(kitty => {
+      kitty.age += 2;
+      return kitty;
+    });
+
+    const result = grownKitties;
     return result;
   }
 };
@@ -90,11 +100,26 @@ const clubPrompts = {
     //   ...etc
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let people = clubs.reduce((peoplesClubs, club) => {
+      club.members.forEach(member => {
+        if(!peoplesClubs[member]) {
+          peoplesClubs[member] = [];
+        }
+        if(club.members.includes(member)) {
+          peoplesClubs[member].push(club.club)
+        }
+      });
+      return peoplesClubs;
+    }, {});
+
+    const result = people;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // If the member is not already a key in the object, we are setting it as a
+    // key. If the member is a part of the clubs members we are populating
+    // that members value of club list.
+
   }
 };
 
@@ -126,11 +151,19 @@ const modPrompts = {
     //   { mod: 4, studentsPerInstructor: 8 }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const modData2 = mods.map(modData => {
+      let mod = modData.mod;
+      let studentsPerInstructor = modData.students / modData.instructors;
+      return {mod, studentsPerInstructor}
+    });
+
+    const result = modData2;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // iterating over the mods and creating a new array of object whose keys are 
+    // the mod by accessing the mods mod property. Then adding the values by
+    // dividing the students by the instructors
   }
 };
 
@@ -161,11 +194,18 @@ const cakePrompts = {
     //    ..etc
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const stockFlavor = cakes.map(cake => {
+      let flavor = cake.cakeFlavor;
+      let inStock = cake.inStock
+      return {flavor, inStock}
+    })
+
+    const result = stockFlavor;
     return result;
 
-    // Annotation:
-    // Write your annotation here as a comment
+    // Annotation: Gathering the flavor and the stock number. These are now the
+    // key value pairs for each object in the array
+    // 
   },
 
   onlyInStock() {
@@ -189,30 +229,45 @@ const cakePrompts = {
     // ..etc
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let inStock = cakes.filter(cake => cake.inStock > 0)
+
+    const result = inStock;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // Creating new array filled with cakes that have an inStock value greater 
+    // than 0
   },
 
   totalInventory() {
     // Return the total amount of cakes in stock e.g.
     // 59
+    let totalCakes = cakes.reduce((total, cake) => {
+      total += cake.inStock;
+      return total;
+    }, 0);
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = totalCakes;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // Add each cakes stock together using the acc.
   },
 
   allToppings() {
     // Return an array of all unique toppings (no duplicates) needed to bake
     // every cake in the dataset e.g.
     // ['dutch process cocoa', 'toasted sugar', 'smoked sea salt', 'berries', ..etc]
+    const allToppings = cakes.reduce((toppings, cake) => {
+      cake.toppings.forEach(topping => {
+        if(!toppings.includes(topping)) {
+          toppings.push(topping);
+        }
+      });
+      return toppings;
+    }, []);
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = allToppings;
     return result;
 
     // Annotation:
@@ -230,11 +285,23 @@ const cakePrompts = {
     //    ...etc
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const toppingStock = cakes.reduce((object, cake) => {
+      cake.toppings.forEach(topping => {
+        if(object.hasOwnProperty(topping)) {
+          object[topping] += 1;
+        } else {
+          object[topping] = 1;
+        }
+      });
+      return object;
+    }, {});
+
+    const result = toppingStock;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // if the placeholder object has the topping as a key already, add 1 to it
+    // if it doesn't, create a key for the topping and set it equal to 1;\
   }
 };
 
@@ -804,8 +871,21 @@ const dinosaurPrompts = {
     //   'Jurassic World': 11,
     //   'Jurassic World: Fallen Kingdom': 18
     // }
-
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    var dinoKeys = Object.keys(dinosaurs)
+    let awesomeDinos = dinoKeys.filter(key => {
+      return  dinosaurs[key].isAwesome === true;
+    });
+    var test = movies.reduce((acc, movie) => {
+      let counter = 0;
+      movie.dinos.forEach(dino => {
+        if (awesomeDinos.includes(dino)) {
+          counter++
+        }
+      })
+      acc[movie.title] = counter
+      return acc
+    }, {})
+    const result = test;
     return result;
 
     // Annotation:
